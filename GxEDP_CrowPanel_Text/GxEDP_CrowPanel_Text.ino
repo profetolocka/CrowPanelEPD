@@ -1,8 +1,13 @@
 // Incluir las bibliotecas de GxEPD2
 #include <GxEPD2_BW.h>
 
-//Incluir fuente para el texto
-#include <Fonts/FreeSans9pt7b.h>
+//Incluir las definiciones de las fuentes
+#include <Fonts/FreeMono9pt7b.h>
+#include <Fonts/FreeMono12pt7b.h>
+#include <Fonts/FreeMonoBold12pt7b.h>
+#include <Fonts/FreeMonoOblique12pt7b.h>
+#include <Fonts/FreeSerifBold18pt7b.h>
+#include <Fonts/FreeSansBold24pt7b.h>
 
 // Definición de pines para CrowPanel
 const int EINK_BUSY = 48;   
@@ -18,10 +23,8 @@ GxEPD2_BW<GxEPD2_579_GDEY0579T93, GxEPD2_579_GDEY0579T93::HEIGHT> display(GxEPD2
 
 void setup() 
 {
-  
   pinMode(7, OUTPUT);        
   digitalWrite(7, HIGH);     // Activates the panel's power supply
-  
   
   // Inicialización del epaper
   display.init(115200);
@@ -29,25 +32,35 @@ void setup()
   display.fillScreen(GxEPD_WHITE);
   display.setRotation(0);
   
-  //Inicializa parámetros del texto
   display.setTextColor(GxEPD_BLACK);
-  display.setTextSize(2);
-  display.setFont(&FreeSans9pt7b);
-
-  //Imprime texto
-  display.setCursor(0, 30);
-  display.println ("Hooooooooooooooola mundoooooooooooo!");
-  display.println ("Hooooooooooooooola mundoooooooooooo!");
-  display.println ("Hooooooooooooooola mundoooooooooooo!");
-  display.println ("Hooooooooooooooola mundoooooooooooo!");
-  display.println ("Hooooooooooooooola mundoooooooooooo!");
-  display.println ("Hooooooooooooooola mundoooooooooooo!");
-
+  display.setTextSize(1);
   
-  //Actualiza ePaper
+  display.setFont(&FreeMono9pt7b);
+  display.setCursor(10, 20);
+  display.print ("Hola mundo!");
+  
+  display.setFont(&FreeMono12pt7b);
+  display.setCursor(10, 50);
+  display.print ("Hola mundo!");
+  
+  display.setFont(&FreeMonoBold12pt7b);
+  display.setCursor(10, 80);
+  display.print ("Hola mundo!");
+  
+  display.setFont(&FreeMonoOblique12pt7b);
+  display.setCursor(10, 110);
+  display.print ("Hola mundo!");
+  
+  display.setFont(&FreeSerifBold18pt7b);
+  display.setCursor(10, 150);
+  display.print ("Hola mundo!");
+  display.display ();
+
+  display.setFont(&FreeSansBold24pt7b);
+  display.setCursor(10, 200);
+  display.print ("Hola mundo!");
   display.display ();
 }
-
 void loop() {
   //No hace nada
 }
