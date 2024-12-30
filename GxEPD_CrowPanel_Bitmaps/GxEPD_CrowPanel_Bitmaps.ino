@@ -6,7 +6,7 @@
 #include <Fonts/FreeSansBold24pt7b.h>
 
 // Incluir el bitmap
-#include "cafe120.h"
+#include "bitcoin.h"
 
 // Definición de pines para CrowPanel
 const int EINK_BUSY = 48;   
@@ -36,23 +36,12 @@ void setup()
   display.setFullWindow();
   display.setRotation(0);
   
-  display.setTextSize(1);
   
   // Limpiar la pantalla
-  display.fillScreen(GxEPD_WHITE); // Fondo amarillo
+  display.fillScreen(GxEPD_WHITE); // Fondo blanco
   // Cargar bitmap
-  display.drawBitmap(6, 6, gImage_cafe120, 120, 120, GxEPD_BLACK);
+  display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);
    
-  // Imprimir "Latte"
-  display.setTextColor(GxEPD_BLACK);
-  display.setCursor(145, 50);
-  display.setFont(&FreeSansBold18pt7b); 
-  display.print ("Latte");
-  // Imprimir "-10%"
-  display.setTextColor(GxEPD_BLACK);
-  display.setCursor(130, 100);
-  display.setFont(&FreeSansBold24pt7b); 
-  display.print ("-10%");
   // Refrescar pantalla
   display.display ();
 }
