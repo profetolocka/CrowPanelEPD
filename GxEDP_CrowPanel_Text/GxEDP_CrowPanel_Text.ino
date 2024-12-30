@@ -21,10 +21,15 @@ const int EINK_MOSI = 11;  // (MOSI)
 //Crea objeto del display
 GxEPD2_BW<GxEPD2_579_GDEY0579T93, GxEPD2_579_GDEY0579T93::HEIGHT> display(GxEPD2_579_GDEY0579T93(EINK_CS, EINK_DC, EINK_RST, EINK_BUSY));
 
+void displayPowerOn () {
+  pinMode(7, OUTPUT);        
+  digitalWrite(7, HIGH);     // Activa la alimentacion del ePaper
+}
+
 void setup() 
 {
-  pinMode(7, OUTPUT);        
-  digitalWrite(7, HIGH);     // Activates the panel's power supply
+
+  displayPowerOn ();      // Prende el ePaper
   
   // Inicialización del epaper
   display.init(115200);
@@ -54,7 +59,6 @@ void setup()
   display.setFont(&FreeSerifBold18pt7b);
   display.setCursor(10, 150);
   display.print ("Hola mundo!");
-  display.display ();
 
   display.setFont(&FreeSansBold24pt7b);
   display.setCursor(10, 200);
