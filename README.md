@@ -14,9 +14,8 @@ Los paneles CrowPanel de Elecrow completas combinan la pantalla, su controlador 
 
 Gracias a esta combinación de características y funcionalidades, los paneles CrowPanel se presentan entonces como una excelente solución para que desarrolles tus propias aplicaciones con pantallas de papel electrónico sin mayores complicaciones.
 
-[](https://i0.wp.com/www.profetolocka.com.ar/wp-content/uploads/2024/12/Modelos-CrowPanel.png?w=1000&ssl=1)
+![Módulos CrowPanel](https://i0.wp.com/www.profetolocka.com.ar/wp-content/uploads/2024/12/Modelos-CrowPanel.png?w=1000&ssl=1)
 
-[![Alt text](https://img.youtube.com/vi/A_XUi8tlKWk/0.jpg)](https://www.youtube.com/watch?v=A_XUi8tlKWk)
 
 ## Contenido
 
