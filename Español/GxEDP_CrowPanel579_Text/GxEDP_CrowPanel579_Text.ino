@@ -1,3 +1,9 @@
+/* Autor: Ernesto Tolocka (profe Tolocka)
+   Fecha creación: 28-12-2024
+   Descripción: Demuestra el uso de distintas fuentes para mostrar texto.
+   License: MIT
+*/
+
 // Incluir las bibliotecas de GxEPD2
 #include <GxEPD2_BW.h>
 
@@ -65,6 +71,8 @@ void setup()
   display.print ("Hola mundo!");
   display.display ();
 }
+
+
 void loop() {
   //No hace nada
 }
