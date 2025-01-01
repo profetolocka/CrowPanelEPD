@@ -9,6 +9,8 @@
 //Incluir las definiciones de las fuentes
 #include <Fonts/FreeSansBold18pt7b.h>
 #include <Fonts/FreeSansBold24pt7b.h>
+#include <Fonts/FreeMonoBold9pt7b.h>
+
 
 // Incluir el bitmap
 #include "bitcoin.h"
@@ -22,8 +24,8 @@ const int EINK_SCK  = 12;  // (SCK)
 const int EINK_MOSI = 11;  // (MOSI)
 
 // Configuración de la red Wi-Fi
-const char* ssid = "**";              // Reemplaza "TuSSID" con el nombre de tu red Wi-Fi
-const char* password = "**";    // Reemplaza "TuContraseñ
+const char* ssid = "LosToloNetwork";              // Reemplaza "TuSSID" con el nombre de tu red Wi-Fi
+const char* password = "performance15";    // Reemplaza "TuContraseñ
 
 // URL de la API de CoinGecko para obtener el precio de Bitcoin en USD
 const char* endpoint = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
@@ -72,19 +74,19 @@ void setup()
   display.fillScreen(GxEPD_WHITE); // Fondo blanco
   
   //Dibujar marco
-  display.drawRect(0, 0, 792, 272, GxEPD_BLACK);
-  display.drawRect(1, 1, 790, 270, GxEPD_BLACK);
+  //display.drawRect(0, 0, 792, 272, GxEPD_BLACK);
+  //display.drawRect(1, 1, 790, 270, GxEPD_BLACK);
 
   // Cargar bitmap
-  display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);
+  //display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);
   
   // Mostrar textos
   display.setTextColor(GxEPD_BLACK);
   display.setTextSize(1);
   
   display.setFont(&FreeSansBold24pt7b);
-  display.setCursor(350, 80);
-  display.print ("Cotizacion BTC");
+  //display.setCursor(350, 80);
+  //display.print ("Cotizacion BTC");
 
   // Refrescar pantalla
   display.display ();
@@ -121,10 +123,40 @@ void loop() {
         dtostrf(price, 6, 0, valorBTC);
         Serial.println(valorBTC);
 
+        //display.setPartialWindow(300, 110, 200, 60);   //Refresco parcial
+        //display.drawRect (300,110,200,60, GxEPD_BLACK);
+
         //Cambiar a refresco parcial
-        display.setCursor(350, 120);
-        display.print (valorBTC);
-        display.display ();
+        //display.setCursor(310, 120);
+        //display.print (valorBTC);
+        //display.display (true);  //actualizacion parcial
+
+        //--TEST
+          // Definir área parcial
+        int16_t x = 1;     //300
+        int16_t y = 1;  //110
+        int16_t w = 200;
+        int16_t h = 60;
+
+        // Configurar ventana parcial
+        display.setPartialWindow(x, y, w, h);
+
+        // Limpiar área específica
+        display.fillRect(x, y, w, h, GxEPD_WHITE);
+
+        // Dibujar nuevo contenido en la ventana parcial
+        display.setFont(&FreeMonoBold9pt7b);
+        display.setCursor(x, y + 30); // Ajusta la posición del cursor según la fuente
+        display.setTextColor(GxEPD_BLACK);
+        display.print("BTC: $50000");
+
+        //probar con do/while
+
+        // Actualizar solo la ventana parcial
+        display.display(true); // 'true' indica actualización parcial
+
+
+
 
       } else {
 
