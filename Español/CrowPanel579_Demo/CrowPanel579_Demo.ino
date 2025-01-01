@@ -1,3 +1,9 @@
+/* Autor: Ernesto Tolocka (profe Tolocka)
+   Fecha creación: 28-12-2024
+   Descripción: Demuestra el uso de las funciones necesarias para mostrar un bitmap a pantalla completa.
+   License: MIT
+*/
+
 #include "EPD.h"             // Funciones para controlar el panel
 #include "Example579.h"      // Imagen a cargar en el panel
 
