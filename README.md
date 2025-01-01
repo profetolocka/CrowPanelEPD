@@ -31,7 +31,7 @@ Puedes contactarme y ver el resto de mi trabajo en:
 
 - Github: [@profetolocka](https://github.com/profetolocka)
 - Blog: [Profe Tolocka](https://www.profetolocka.com.ar)
-- Hackster: [Hackster](https://www.hackster.io/etolocka)
+- Hackster.io: [Hackster](https://www.hackster.io/etolocka)
 - Redes: [linktr.ee](https://linktr.ee/profetolocka)
 
 ---
@@ -65,5 +65,6 @@ You can contact me and see the rest of my work at:
 
 - Github: [@profetolocka](https://github.com/profetolocka)
 - Blog: [Profe Tolocka](https://www.profetolocka.com.ar)
+- Hackster.io: [Hackster](https://www.hackster.io/etolocka)
 - Social: [linktr.ee](https://linktr.ee/profetolocka)
 
