@@ -4,7 +4,7 @@
 
 ## Introducción
 
-Este repositorio tiene por finalidad mostrar los proyectos que he realizado usando distintao paneles de la familia **CrowPanel** de la marca **Elecrow**. Es una colección de proyectos realizados a lo largo del tiempo e incluye programas de prueba, utilidades y proyectos específicos, desde aplicaciones simples y sencillas hasta proyectos mas complejos.
+Este repositorio tiene por finalidad mostrar los proyectos que he realizado usando distintos paneles de la familia **CrowPanel** de la marca **Elecrow**. Es una colección de proyectos realizados a lo largo del tiempo e incluye programas de prueba, utilidades y proyectos específicos, desde aplicaciones simples y sencillas hasta proyectos mas complejos.
 
 Si eres un estudiante, hobbysta o maker, espero que estos proyectos te sirvan para aprender el uso y programación de estos paneles para que realices tus propios diseños.
 
