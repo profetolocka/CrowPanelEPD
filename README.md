@@ -1,10 +1,10 @@
-[Go to english version](#XIAO-Projects)
+[Go to english version](#CrowPanel-EPD-Panels)
 
 # Paneles CrowPanel EPD
 
 ## Introducción
 
-Este repositorio tiene por finalidad mostrar los proyectos que he realizado usando distintas paneles de la familia CrowPanel de la marca Elecrow. Es una colección de proyectos realizados a lo largo del tiempo e incluye programas de prueba, utilidades y proyectos específicos, desde aplicaciones simples y sencillas hasta proyectos mas complejos.
+Este repositorio tiene por finalidad mostrar los proyectos que he realizado usando distintas paneles de la familia **CrowPanel** de la marca **Elecrow**. Es una colección de proyectos realizados a lo largo del tiempo e incluye programas de prueba, utilidades y proyectos específicos, desde aplicaciones simples y sencillas hasta proyectos mas complejos.
 
 Si eres un estudiante, hobbysta o maker, espero que estos proyectos te sirvan para aprender el uso y programación de estos paneles para que realices tus propios diseños.
 
@@ -19,7 +19,7 @@ Gracias a esta combinación de características y funcionalidades, los paneles C
 
 ## Contenido
 
-El repositorio está organizado en dos carpetas, **Español** y **English** organizando el contenido en esos dos idiomas. Dentro de ellas se encuentran subcarpetas, cada una de las cuales contiene un proyecto o ejemplo diferente, con su correspondiente archivo README explicativo. El nombre de la carpeta indica la placa utilizada, los módulos o expansiones empleados (si los hubiere) y el lenguaje de programación usado (MPY=Micropython, CPY=CircuitPython, ARD=Arduino).
+El repositorio está organizado en dos carpetas, **Español** y **English** organizando el contenido en esos dos idiomas. Dentro de ellas se encuentran subcarpetas, cada una de las cuales contiene un proyecto o ejemplo diferente, con su correspondiente archivo README explicativo. El nombre de la carpeta indica el panel utilizado.
 
 ## Licencia
 
@@ -34,26 +34,25 @@ Puedes contactarme y ver el resto de mi trabajo en:
 - Redes: [linktr.ee](https://linktr.ee/profetolocka)
 
 ---
-# XIAO Projects
+# CrowPanel EPD Panels
 
 ## Introduction
 
-This repository aims to showcase the projects I have developed using various boards from the XIAO family by Seeed Studio. It is a collection of projects created over time and includes test programs, utilities, and specific projects, ranging from simple and straightforward applications to more complex ones.
+This repository aims to showcase the projects I have undertaken using different panels from the **CrowPanel** family by the brand **Elecrow**. It is a collection of projects carried out over time and includes test programs, utilities, and specific projects, ranging from simple and straightforward applications to more complex projects.
 
-If you are a student, hobbyist, or maker, I hope these projects will help you learn how to use and program XIAO boards so you can create your own designs.
+If you are a student, hobbyist, or maker, I hope these projects help you learn how to use and program these panels so you can create your own designs.
 
-## XIAO
+## CrowPanel
 
-The XIAO boards from Seeed Studio represent a family of compact, powerful, and versatile microcontrollers designed for IoT projects, machine learning, and general electronics.  
-With an ultra-small size (only 20 x 17.5 mm) and based on popular hardware platforms such as ESP32, RA4M1, Raspberry, nRF52840, and SAMD21, these microcontrollers are an excellent choice for developing advanced solutions and experimenting with Tiny Machine Learning (TinyML).
+The CrowPanel panels from Elecrow fully combine the display, its controller, and a powerful ESP32-S3 CPU into a single device. Additionally, the panels include two buttons and a rotary switch to facilitate user interaction, a battery connector, a UART port, a GPIO connector that allows integrating the ESP32-S3 pins with external circuits, and an SD card slot, ideal for storing graphical information or other data. A good amount of memory, both Flash and RAM, and the ESP32's ability to communicate via Bluetooth and Wi-Fi, facilitate the development of IoT applications that require some type of connectivity.
 
-The XIAO boards (a prefix in Chinese that translates to “small”) pack immense capability and flexibility into a compact size.
+Thanks to this combination of features and functionalities, the CrowPanel panels are an excellent solution for developing your own applications with e-paper displays without major complications.
 
-[![Alt text](https://img.youtube.com/vi/A_XUi8tlKWk/0.jpg)](https://www.youtube.com/watch?v=A_XUi8tlKWk)
+![CrowPanel Modules](https://i0.wp.com/www.profetolocka.com.ar/wp-content/uploads/2024/12/Modelos-CrowPanel.png?w=1000&ssl=1)
 
 ## Content
 
-The repository is organized into two folders, **Español** and **English**, categorizing the content by these two languages. Within them, there are subfolders, each containing a different project or example with its corresponding README file. The folder name indicates the board used, the modules or expansions employed (if any), and the programming language used (MPY=Micropython, CPY=CircuitPython, ARD=Arduino).
+The repository is organized into two folders, **Español** and **English**, organizing the content in these two languages. Within them are subfolders, each of which contains a different project or example, with its corresponding explanatory README file. The name of the folder indicates the panel used.
 
 ## License
 
