@@ -1,9 +1,11 @@
+/* Autor: Ernesto Tolocka (profe Tolocka)
+   Fecha creación: 28-12-2024
+   Descripción: Demuestra como cargar una imagen bitmap.
+   License: MIT
+*/
+
 // Incluir las bibliotecas necesarias
 #include <GxEPD2_BW.h>
-
-//Incluir las definiciones de las fuentes
-#include <Fonts/FreeSansBold18pt7b.h>
-#include <Fonts/FreeSansBold24pt7b.h>
 
 // Incluir el bitmap
 #include "bitcoin.h"
@@ -36,7 +38,6 @@ void setup()
   display.setFullWindow();
   display.setRotation(0);
   
-  
   // Limpiar la pantalla
   display.fillScreen(GxEPD_WHITE); // Fondo blanco
   // Cargar bitmap
@@ -45,6 +46,8 @@ void setup()
   // Refrescar pantalla
   display.display ();
 }
+
+
 void loop() {
   //No hace nada
 }
