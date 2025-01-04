@@ -1,3 +1,9 @@
+/* Autor: Ernesto Tolocka (profe Tolocka)
+   Fecha creación: 3-01-2025
+   Descripción: Demuestra el uso de algunas primitivas haciendo un gráfico de barras.
+   Licencia: MIT
+*/
+
 // Incluir las bibliotecas necesarias
 #include <GxEPD2_BW.h>
 
