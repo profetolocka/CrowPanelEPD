@@ -40,8 +40,16 @@ void setup()
   
   // Limpiar la pantalla
   display.fillScreen(GxEPD_WHITE); // Fondo blanco
-  // Cargar bitmap
-  display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);
+  
+  // Ancho y alto del bitmap
+  int bitmapW = 250;
+  int bitmapH = 250;
+
+  int bitmapX = (display.width () - bitmapW)/2;
+  int bitmapY = (display.height() - bitmapH)/2;
+  
+  //Cargar bitmap
+  display.drawBitmap(bitmapX, bitmapY, gImage_bitcoin, 250, 250, GxEPD_BLACK);
    
   // Refrescar pantalla
   display.display ();
