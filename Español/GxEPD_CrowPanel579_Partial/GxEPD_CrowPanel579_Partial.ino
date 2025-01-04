@@ -1,4 +1,12 @@
-// Incluir las bibliotecas de GxEPD2
+/* Autor: Ernesto Tolocka (profe Tolocka)
+   Fecha creación: 3-01-2025
+   Descripción: Demuestra el uso del refresco parcial.
+   Imprime el valor de un contador ascendente, primero en modo refresco total
+   y luego en modo de refresco parcial.
+   Licencia: MIT
+*/
+
+// Incluir las librerias de GxEPD2
 #include <GxEPD2_BW.h>
 
 //Incluir las definiciones de las fuentes
@@ -24,7 +32,7 @@ void displayPowerOn () {
 void setup() 
 {
 
-  int x=0;
+  int x=0;   // Contador 
 
   
   displayPowerOn ();      // Prende el ePaper
@@ -51,7 +59,7 @@ void setup()
     while (display.nextPage());
     delay (100);
   }
-  display.fillScreen(GxEPD_WHITE);
+  display.fillScreen(GxEPD_WHITE);  
 
 
   // Modo de refresco parcial
