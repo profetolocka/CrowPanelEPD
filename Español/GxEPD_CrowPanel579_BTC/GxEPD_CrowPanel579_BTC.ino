@@ -23,6 +23,10 @@ const int EINK_CS   = 45;
 const int EINK_SCK  = 12;  // (SCK)
 const int EINK_MOSI = 11;  // (MOSI)
 
+// Teclas MENU y EXIT
+const int KEY_MENU = 38;
+const int KEY_EXIT = 39;
+
 // Configuración de la red Wi-Fi
 const char* ssid = "LosToloNetwork";              // Reemplaza "TuSSID" con el nombre de tu red Wi-Fi
 const char* password = "performance15";    // Reemplaza "TuContraseñ
@@ -40,20 +44,20 @@ void displayPowerOn () {
   digitalWrite(7, HIGH);     // Activa la alimentación del ePaper
 }
 
+void keyExitPressed () {
+
+}
+
+void keyMenuPressed () {
+
+}
+
+
 void setup() 
 {
-  
-  displayPowerOn ();
-  
-  // Inicialización del epaper
-  display.init(115200);
-  display.setFullWindow();
-  display.setRotation(0);
-
-    // Limpiar la pantalla
-  display.fillScreen(GxEPD_WHITE); // Fondo blanco
-  // Refrescar pantalla
-  display.display ();
+  // Pines de las teclas
+  pinMode (KEY_MENU, INPUT);   // MENU
+  pinMode (KEY_EXIT, INPUT);   // EXIT
   
   // Conexión a la red Wi-Fi
   Serial.println("Conectando a Wi-Fi...");
@@ -70,24 +74,35 @@ void setup()
   Serial.print("Conectado a: ");
   Serial.println(WiFi.SSID());
   
-  // Limpiar la pantalla
+  displayPowerOn ();
+
+  // Inicialización del epaper
+  display.init(115200);
+  display.setFullWindow();
+  display.setRotation(0);
+
+    // Limpiar la pantalla
   display.fillScreen(GxEPD_WHITE); // Fondo blanco
+  // Refrescar pantalla
+  //display.display ();
+
   
   //Dibujar marco
-  //display.drawRect(0, 0, 792, 272, GxEPD_BLACK);
-  //display.drawRect(1, 1, 790, 270, GxEPD_BLACK);
+  display.drawRect(0, 0, 792, 272, GxEPD_BLACK);
+  display.drawRect(1, 1, 790, 270, GxEPD_BLACK);
 
   // Cargar bitmap
-  //display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);
+  display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);
   
   // Mostrar textos
   display.setTextColor(GxEPD_BLACK);
   display.setTextSize(1);
   
   display.setFont(&FreeSansBold24pt7b);
-  //display.setCursor(350, 80);
-  //display.print ("Cotizacion BTC");
-
+  display.setCursor(350, 100);
+  display.print ("Cotizacion BTC");
+  display.setCursor (380,172);
+  display.print ("USD");
   // Refrescar pantalla
   display.display ();
 }
@@ -123,40 +138,25 @@ void loop() {
         dtostrf(price, 6, 0, valorBTC);
         Serial.println(valorBTC);
 
-        //display.setPartialWindow(300, 110, 200, 60);   //Refresco parcial
-        //display.drawRect (300,110,200,60, GxEPD_BLACK);
-
-        //Cambiar a refresco parcial
-        //display.setCursor(310, 120);
-        //display.print (valorBTC);
-        //display.display (true);  //actualizacion parcial
-
-        //--TEST
-          // Definir área parcial
-        int16_t x = 1;     //300
-        int16_t y = 1;  //110
-        int16_t w = 200;
-        int16_t h = 60;
+        // Definir área parcial
+        int windowX = 480; 
+        int windowY = 132; 
+        int windowW = 200;
+        int windowH = 64;
 
         // Configurar ventana parcial
-        display.setPartialWindow(x, y, w, h);
+        display.setPartialWindow(windowX, windowY, windowW, windowH);
 
-        // Limpiar área específica
-        display.fillRect(x, y, w, h, GxEPD_WHITE);
-
+        display.firstPage();
+        do {
+          display.fillScreen(GxEPD_WHITE);
         // Dibujar nuevo contenido en la ventana parcial
-        display.setFont(&FreeMonoBold9pt7b);
-        display.setCursor(x, y + 30); // Ajusta la posición del cursor según la fuente
-        display.setTextColor(GxEPD_BLACK);
-        display.print("BTC: $50000");
-
-        //probar con do/while
-
-        // Actualizar solo la ventana parcial
-        display.display(true); // 'true' indica actualización parcial
-
-
-
+          //display.setFont(&FreeMonoBold9pt7b);
+          display.setCursor(windowX, windowY + 40); // Ajusta la posición del cursor según la fuente
+          display.setTextColor(GxEPD_BLACK);
+          display.print(valorBTC);
+        }
+        while (display.nextPage());
 
       } else {
 
