@@ -24,15 +24,16 @@ void displayPowerOn () {
 
 void setup() 
 {
-  
+  // Definir canvas para contener al gráfico
   int canvasW = 500;
   int canvasH = 200;
   int canvasX = display.width()/2 - canvasW/2;
   int canvasY = 50;
 
+  // Array para 50 valores 
   int values [50];
 
-  
+  // Prender pantalla
   displayPowerOn ();
   
   // Inicialización del epaper
@@ -51,7 +52,7 @@ void setup()
   display.setFullWindow();
   display.fillScreen(GxEPD_WHITE); // Fondo blanco
  
-  //Canvas
+  // Dibujar Canvas
   display.drawRect(canvasX, canvasY, canvasW, canvasH, GxEPD_BLACK);
 
   // Escala vertical
@@ -64,7 +65,7 @@ void setup()
     display.drawLine (canvasX, canvasY+(10*y), canvasX+canvasW-1, canvasY+(10*y), GxEPD_BLACK);
   }
 
-  // Valores verticales
+  // Etiquetas de valores verticales
   display.setCursor(canvasX-70, canvasY);
   display.print ("$100K");
   display.setCursor(canvasX-70, canvasY+(canvasH/2));
@@ -72,7 +73,7 @@ void setup()
   display.setCursor(canvasX-70, canvasY+canvasH);
   display.print ("  $0");
 
-  //Llenar la lista con valores aleatorios
+  //Llenar el array con valores aleatorios
   for (int i=0; i<50; i++) {
     values [i] = 70 + random(-20, 21);
   }
@@ -84,7 +85,6 @@ void setup()
   for (int i=0; i<50; i++) {
     int y = values[i]*scale;
     display.fillRect (canvasX+(i*10), canvasY + (canvasH -y), 10, y, GxEPD_BLACK);
-    Serial.println (y);
   }
 
   // Refrescar pantalla
