@@ -15,6 +15,8 @@
 // Incluir el bitmap
 #include "bitcoin.h"
 
+#include "menuLateral.h"
+
 // Definición de pines para CrowPanel
 const int EINK_BUSY = 48;   
 const int EINK_RST  = 47;   
@@ -91,9 +93,10 @@ void setup()
   display.drawRect(0, 0, 792, 272, GxEPD_BLACK);
   display.drawRect(1, 1, 790, 270, GxEPD_BLACK);
 
-  // Cargar bitmap
-  display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);
-  
+  // Cargar bitmaps
+  display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);  // BTC
+  display.drawBitmap (760,0, gImage_menuLateral, 32, 272, GxEPD_BLACK);  // Menu lateral
+
   // Mostrar textos
   display.setTextColor(GxEPD_BLACK);
   display.setTextSize(1);
