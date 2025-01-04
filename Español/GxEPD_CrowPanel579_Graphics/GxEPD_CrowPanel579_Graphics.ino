@@ -56,12 +56,12 @@ void setup()
 
   // Escala vertical
   for (int x=1; x<50; x++) {
-    display.drawLine (canvasX+(10*x), canvasY, canvasX+(10*x), canvasY+canvasH, GxEPD_BLACK);
+    display.drawLine (canvasX+(10*x), canvasY, canvasX+(10*x), canvasY+canvasH-1, GxEPD_BLACK);
   }
 
   // Escala horizontal
   for (int y=1; y<20; y++) {
-    display.drawLine (canvasX, canvasY+(10*y), canvasX+canvasW, canvasY+(10*y), GxEPD_BLACK);
+    display.drawLine (canvasX, canvasY+(10*y), canvasX+canvasW-1, canvasY+(10*y), GxEPD_BLACK);
   }
 
   // Valores verticales
