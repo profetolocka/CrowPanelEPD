@@ -12,9 +12,8 @@
 #include <Fonts/FreeMonoBold9pt7b.h>
 
 
-// Incluir el bitmap
+// Incluir los bitmaps
 #include "bitcoin.h"
-
 #include "menuLateral.h"
 
 // Definición de pines para CrowPanel
@@ -26,8 +25,8 @@ const int EINK_SCK  = 12;  // (SCK)
 const int EINK_MOSI = 11;  // (MOSI)
 
 // Teclas MENU y EXIT
-const int KEY_MENU = 38;
-const int KEY_EXIT = 39;
+const int KEY_MENU = 2;
+const int KEY_EXIT = 1;
 
 // Configuración de la red Wi-Fi
 const char* ssid = "LosToloNetwork";              // Reemplaza "TuSSID" con el nombre de tu red Wi-Fi
@@ -46,11 +45,31 @@ void displayPowerOn () {
   digitalWrite(7, HIGH);     // Activa la alimentación del ePaper
 }
 
-void keyExitPressed () {
+bool keyExitPressed () {
+  // Devuelve true si está apretada
+  if (digitalRead(KEY_EXIT)==0) {
+    delay (100);
+    if (digitalRead (KEY_EXIT)==0)
+      return true;
+    else
+      return false;  
+  }
+  else
+    return false;
 
 }
 
-void keyMenuPressed () {
+bool keyMenuPressed () {
+  // Devuelve true si está apretada
+  if (digitalRead(KEY_MENU)==0) {
+    delay (100);
+    if (digitalRead (KEY_MENU)==0)
+      return true;
+    else
+      return false;  
+  }
+  else
+    return false;
 
 }
 
@@ -60,8 +79,8 @@ void setup()
   // Pines de las teclas
   pinMode (KEY_MENU, INPUT);   // MENU
   pinMode (KEY_EXIT, INPUT);   // EXIT
-  
-  // Conexión a la red Wi-Fi
+
+    // Conexión a la red Wi-Fi
   Serial.println("Conectando a Wi-Fi...");
   WiFi.begin(ssid, password);
 
@@ -160,6 +179,13 @@ void loop() {
           display.print(valorBTC);
         }
         while (display.nextPage());
+
+        //Teclas
+        if (keyExitPressed()) 
+          Serial.println ("EXIT");
+
+        if (keyMenuPressed()) 
+          Serial.println ("MENU");
 
       } else {
 
