@@ -1,14 +1,18 @@
-// Incluir las bibliotecas necesarias
+/* Autor: Ernesto Tolocka (profe Tolocka)
+   Fecha creación: 6-Ene-2024
+   Descripción: Muestra la cotización del bitcoin (BTC) en tiempo real
+   Con las teclas MENU y EXIT se puede cambiar la moneda (USD y Euro)
+   Licencia: MIT
+*/
 
+// Incluir las bibliotecas necesarias
 #include <GxEPD2_BW.h>      // GxEPD2 monocromo
 #include <WiFi.h>           // Funciones para la conexión WiFi
 #include <HTTPClient.h>     // Para hacer peticiones HTTP
 #include <ArduinoJson.h>    // Para parsear JSON
 
 //Incluir las definiciones de las fuentes
-#include <Fonts/FreeSansBold18pt7b.h>
 #include <Fonts/FreeSansBold24pt7b.h>
-#include <Fonts/FreeMonoBold9pt7b.h>
 
 // Incluir los bitmaps
 #include "bitcoin.h"
@@ -31,14 +35,14 @@ const int CURR_USD = 0;
 const int CURR_EUR = 1;
 
 // Configuración de la red Wi-Fi
-const char* ssid = "LosToloNetwork";              // Reemplaza "TuSSID" con el nombre de tu red Wi-Fi
-const char* password = "performance15";    // Reemplaza "TuContraseñ
+const char* ssid = "LosToloNetwork";       // Usa el nombre de tu red 
+const char* password = "performance15";    // Usa tu contraseña 
 
 // URL de la API de CoinGecko para obtener el precio de Bitcoin en USD y euros
 const char* endpoint = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur";
 
-unsigned long tiempoAnterior = 0;  // Almacena el último tiempo registrado
-const unsigned long intervalo = 30 * 1000;  // Retardo deseado (en milisegundos)
+unsigned long intervalo = 30 * 1000;  // Retardo deseado (en milisegundos)
+unsigned long tiempoAnterior = millis() - intervalo;  // Valor inicial atrasado
 
 char valorBTC [15];       // Para el valor como string
 
@@ -49,9 +53,9 @@ int currency = CURR_USD;   // Arranca en USD
 GxEPD2_BW<GxEPD2_579_GDEY0579T93, GxEPD2_579_GDEY0579T93::HEIGHT> display(GxEPD2_579_GDEY0579T93(EINK_CS, EINK_DC, EINK_RST, EINK_BUSY));
 
 void displayPowerOn () {
-
+  // Activa la alimentación del ePaper
   pinMode(7, OUTPUT);        
-  digitalWrite(7, HIGH);     // Activa la alimentación del ePaper
+  digitalWrite(7, HIGH);     
 }
 
 bool keyExitPressed () {
@@ -106,14 +110,14 @@ void displayPrintPartial (char *valor) {
 
 void setup() 
 {
-  // Pines de las teclas
+  // Entradas de las teclas
   pinMode (KEY_MENU, INPUT);   // MENU
   pinMode (KEY_EXIT, INPUT);   // EXIT
 
   Serial.begin (115200);
 
-  // Conexión a la red Wi-Fi
-  Serial.println("Conectando a Wi-Fi...");
+  // Intentar conectar al WiFi
+  Serial.println("Conectando a WiFi...");
   WiFi.begin(ssid, password);
 
   // Espera hasta que se conecte
@@ -122,12 +126,12 @@ void setup()
     Serial.print(".");
   }
 
-  // Una vez conectado
+  // Conexión exitosa
   Serial.println("");
   Serial.print("Conectado a: ");
   Serial.println(WiFi.SSID());
   
-  displayPowerOn ();
+  displayPowerOn ();   // Enciende pantalla
 
   // Inicialización del epaper
   display.init(115200);
@@ -178,11 +182,11 @@ void loop() {
     // Actualiza el tiempo registrado
     tiempoAnterior = tiempoActual;
 
-    // Solo intentamos hacer la petición si seguimos conectados
+    // Solo intenta hacer la petición si está conectado
     if (WiFi.status() == WL_CONNECTED) {
       HTTPClient http;
       http.begin(endpoint);           // Prepara la conexión
-      int httpCode = http.GET();      // Lanza la petición GET a la API
+      int httpCode = http.GET();      // Realiza la petición GET a la API de CoinGecko
 
       if (httpCode > 0) {
         // Si la respuesta es positiva, leemos el contenido
@@ -226,7 +230,6 @@ void loop() {
       Serial.println("WiFi desconectado, intentando reconectar...");
       WiFi.begin(ssid, password);
     }
-
 
   }
 
