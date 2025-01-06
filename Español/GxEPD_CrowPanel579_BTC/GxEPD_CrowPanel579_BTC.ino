@@ -5,12 +5,10 @@
 #include <HTTPClient.h>     // Para hacer peticiones HTTP
 #include <ArduinoJson.h>    // Para parsear JSON
 
-
 //Incluir las definiciones de las fuentes
 #include <Fonts/FreeSansBold18pt7b.h>
 #include <Fonts/FreeSansBold24pt7b.h>
 #include <Fonts/FreeMonoBold9pt7b.h>
-
 
 // Incluir los bitmaps
 #include "bitcoin.h"
@@ -28,12 +26,23 @@ const int EINK_MOSI = 11;  // (MOSI)
 const int KEY_MENU = 2;
 const int KEY_EXIT = 1;
 
+// Monedas para cotizacion
+const int CURR_USD = 0;
+const int CURR_EUR = 1;
+
 // Configuración de la red Wi-Fi
 const char* ssid = "LosToloNetwork";              // Reemplaza "TuSSID" con el nombre de tu red Wi-Fi
 const char* password = "performance15";    // Reemplaza "TuContraseñ
 
-// URL de la API de CoinGecko para obtener el precio de Bitcoin en USD
-const char* endpoint = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
+// URL de la API de CoinGecko para obtener el precio de Bitcoin en USD y euros
+const char* endpoint = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur";
+
+unsigned long tiempoAnterior = 0;  // Almacena el último tiempo registrado
+const unsigned long intervalo = 30 * 1000;  // Retardo deseado (en milisegundos)
+
+char valorBTC [15];       // Para el valor como string
+
+int currency = CURR_USD;   // Arranca en USD
 
 //GDEY0579T93    5.79" b/w 792x272, SSD1683
 //Crea objeto del display
@@ -46,7 +55,7 @@ void displayPowerOn () {
 }
 
 bool keyExitPressed () {
-  // Devuelve true si está apretada
+  // Devuelve true si está apretada EXIT
   if (digitalRead(KEY_EXIT)==0) {
     delay (100);
     if (digitalRead (KEY_EXIT)==0)
@@ -56,11 +65,10 @@ bool keyExitPressed () {
   }
   else
     return false;
-
 }
 
 bool keyMenuPressed () {
-  // Devuelve true si está apretada
+  // Devuelve true si está apretada MENU
   if (digitalRead(KEY_MENU)==0) {
     delay (100);
     if (digitalRead (KEY_MENU)==0)
@@ -70,9 +78,31 @@ bool keyMenuPressed () {
   }
   else
     return false;
-
 }
 
+void displayPrintPartial (char *valor) {
+  // Imprime el valor del BTC con refresco parcial
+  // Definir área parcial
+  int windowX = 400; 
+  int windowY = 132; 
+  int windowW = 320;
+  int windowH = 64;
+
+  // Configurar ventana parcial
+  display.setPartialWindow(windowX, windowY, windowW, windowH);
+
+  // Mostrar valor en ePaper con refresco parcial
+  display.firstPage();
+  do {
+    display.fillScreen(GxEPD_WHITE);
+    display.setCursor(windowX, windowY + 40); // Ajusta la posición del cursor según la fuente
+    display.setTextColor(GxEPD_BLACK);
+    display.print(valor);
+  }
+  while (display.nextPage());
+}
+
+////////////////////////////////////////////////
 
 void setup() 
 {
@@ -80,7 +110,9 @@ void setup()
   pinMode (KEY_MENU, INPUT);   // MENU
   pinMode (KEY_EXIT, INPUT);   // EXIT
 
-    // Conexión a la red Wi-Fi
+  Serial.begin (115200);
+
+  // Conexión a la red Wi-Fi
   Serial.println("Conectando a Wi-Fi...");
   WiFi.begin(ssid, password);
 
@@ -102,11 +134,8 @@ void setup()
   display.setFullWindow();
   display.setRotation(0);
 
-    // Limpiar la pantalla
+  // Limpiar la pantalla
   display.fillScreen(GxEPD_WHITE); // Fondo blanco
-  // Refrescar pantalla
-  //display.display ();
-
   
   //Dibujar marco
   display.drawRect(0, 0, 792, 272, GxEPD_BLACK);
@@ -123,89 +152,82 @@ void setup()
   display.setFont(&FreeSansBold24pt7b);
   display.setCursor(350, 100);
   display.print ("Cotizacion BTC");
-  display.setCursor (380,172);
-  display.print ("USD");
+
   // Refrescar pantalla
   display.display ();
 }
+
+
 void loop() {
     
-  char valorBTC[7];       // Para el valor como string
+  unsigned long tiempoActual = millis();
+ 
+  //Teclas
+  if (keyExitPressed())  {
+    currency = CURR_EUR;
+    tiempoAnterior = tiempoActual - intervalo; // Fuerza actualizacion
+  }
 
-  // Solo intentamos hacer la petición si seguimos conectados
-  if (WiFi.status() == WL_CONNECTED) {
-    HTTPClient http;
-    http.begin(endpoint);           // Prepara la conexión
-    int httpCode = http.GET();      // Lanza la petición GET a la API
+  if (keyMenuPressed()) {
+    currency = CURR_USD;
+    tiempoAnterior = tiempoActual - intervalo; // Fuerza actualizacion
+  }
+ 
+  // Verifica si ha pasado el intervalo
+  if (tiempoActual - tiempoAnterior >= intervalo) {
+    // Actualiza el tiempo registrado
+    tiempoAnterior = tiempoActual;
 
-    if (httpCode > 0) {
-      // Si la respuesta es positiva, leemos el contenido
-      String payload = http.getString();
+    // Solo intentamos hacer la petición si seguimos conectados
+    if (WiFi.status() == WL_CONNECTED) {
+      HTTPClient http;
+      http.begin(endpoint);           // Prepara la conexión
+      int httpCode = http.GET();      // Lanza la petición GET a la API
 
-      // Usamos ArduinoJson para parsear
-      DynamicJsonDocument doc(1024);
-      DeserializationError error = deserializeJson(doc, payload);
+      if (httpCode > 0) {
+        // Si la respuesta es positiva, leemos el contenido
+        String payload = http.getString();
 
-      if (!error) {
-        // La respuesta de CoinGecko suele ser de la forma:
-        // {
-        //   "bitcoin": {
-        //     "usd": 28381
-        //   }
-        // }
-        float price = doc["bitcoin"]["usd"];
-        Serial.print("BTC (USD): $");
-        Serial.println(price);
+        // Usamos ArduinoJson para parsear
+        DynamicJsonDocument doc(1024);
+        DeserializationError error = deserializeJson(doc, payload);
 
-        dtostrf(price, 6, 0, valorBTC);
-        Serial.println(valorBTC);
+        if (!error) {
+          // Parsear valores
+          float priceUSD = doc["bitcoin"]["usd"];
+          float priceEUR = doc["bitcoin"]["eur"];
 
-        // Definir área parcial
-        int windowX = 480; 
-        int windowY = 132; 
-        int windowW = 200;
-        int windowH = 64;
+          // Preparar según la moneda
+          if (currency == CURR_USD) 
+            sprintf(valorBTC, "USD %.0f", priceUSD);
+          else
+            sprintf(valorBTC, "EUR %.0f", priceEUR);
 
-        // Configurar ventana parcial
-        display.setPartialWindow(windowX, windowY, windowW, windowH);
+          Serial.println(valorBTC);
 
-        display.firstPage();
-        do {
-          display.fillScreen(GxEPD_WHITE);
-        // Dibujar nuevo contenido en la ventana parcial
-          //display.setFont(&FreeMonoBold9pt7b);
-          display.setCursor(windowX, windowY + 40); // Ajusta la posición del cursor según la fuente
-          display.setTextColor(GxEPD_BLACK);
-          display.print(valorBTC);
-        }
-        while (display.nextPage());
-
-        //Teclas
-        if (keyExitPressed()) 
-          Serial.println ("EXIT");
-
-        if (keyMenuPressed()) 
-          Serial.println ("MENU");
-
+          // Imprime valor usando Refresco Parcial
+          displayPrintPartial (valorBTC);
+          
       } else {
 
         // Si hay un error al parsear
         Serial.print("Error al parsear JSON: ");
         Serial.println(error.c_str());
       }
+      } else {
+        // Si el código de respuesta HTTP es negativo o falla
+        Serial.print("Error en la petición: ");
+        Serial.println(httpCode);
+      }
+
+      http.end(); // Cierra la conexión
+  
     } else {
-      // Si el código de respuesta HTTP es negativo o falla
-      Serial.print("Error en la petición: ");
-      Serial.println(httpCode);
+      Serial.println("WiFi desconectado, intentando reconectar...");
+      WiFi.begin(ssid, password);
     }
 
-    http.end(); // Cierra la conexión
-  } else {
-    Serial.println("WiFi desconectado, intentando reconectar...");
-    WiFi.begin(ssid, password);
-  }
 
-  // Esperamos 15 segundos antes de la próxima lectura
-  delay(15000);
+  }
 
 }
