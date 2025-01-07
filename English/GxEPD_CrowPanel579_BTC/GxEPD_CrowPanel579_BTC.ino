@@ -1,24 +1,24 @@
-/* Autor: Ernesto Tolocka (profe Tolocka)
-   Fecha creación: 6-Ene-2024
-   Descripción: Muestra la cotización del bitcoin (BTC) en tiempo real
-   Con las teclas MENU y EXIT se puede cambiar la moneda (USD y Euro)
-   Licencia: MIT
+/* Author: Ernesto Tolocka (profe Tolocka)
+   Creation Date: Jan 6, 2024
+   Description: Displays the real-time Bitcoin (BTC) price.
+   The MENU and EXIT buttons allow switching between currencies (USD and Euro).
+   License: MIT
 */
 
-// Incluir las bibliotecas necesarias
-#include <GxEPD2_BW.h>      // GxEPD2 monocromo
-#include <WiFi.h>           // Funciones para la conexión WiFi
-#include <HTTPClient.h>     // Para hacer peticiones HTTP
-#include <ArduinoJson.h>    // Para parsear JSON
+// Include necessary libraries
+#include <GxEPD2_BW.h>      // GxEPD2 for monochrome displays
+#include <WiFi.h>           // Functions for WiFi connection
+#include <HTTPClient.h>     // For making HTTP requests
+#include <ArduinoJson.h>    // For parsing JSON
 
-//Incluir las definiciones de las fuentes
+// Include font definitions
 #include <Fonts/FreeSansBold24pt7b.h>
 
-// Incluir los bitmaps
+// Include bitmaps
 #include "bitcoin.h"
-#include "menuLateral.h"
+#include "sideMenu.h"
 
-// Definición de pines para CrowPanel
+// Define pins for CrowPanel
 const int EINK_BUSY = 48;   
 const int EINK_RST  = 47;   
 const int EINK_DC   = 46;   
@@ -26,211 +26,201 @@ const int EINK_CS   = 45;
 const int EINK_SCK  = 12;  // (SCK)
 const int EINK_MOSI = 11;  // (MOSI)
 
-// Teclas MENU y EXIT
+// MENU and EXIT keys
 const int KEY_MENU = 2;
 const int KEY_EXIT = 1;
 
-// Monedas para cotizacion
+// Currencies for price display
 const int CURR_USD = 0;
 const int CURR_EUR = 1;
 
-// Configuración de la red Wi-Fi
-const char* ssid = "LosToloNetwork";       // Usa el nombre de tu red 
-const char* password = "performance15";    // Usa tu contraseña 
+// Wi-Fi network configuration
+const char* ssid = "LosToloNetwork";       // Use your network name
+const char* password = "performance15";    // Use your password
 
-// URL de la API de CoinGecko para obtener el precio de Bitcoin en USD y euros
+// CoinGecko API URL to fetch Bitcoin price in USD and EUR
 const char* endpoint = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur";
 
-unsigned long intervalo = 30 * 1000;  // Retardo deseado (en milisegundos)
-unsigned long tiempoAnterior = millis() - intervalo;  // Valor inicial atrasado
+unsigned long interval = 30 * 1000;  // Desired delay (in milliseconds)
+unsigned long timePrev = millis() - interval;  // Initial delayed value
 
-char valorBTC [15];       // Para el valor como string
+char valorBTC[15];       // For storing the price as a string
 
-int currency = CURR_USD;   // Arranca en USD
+int currency = CURR_USD;   // Start with USD
 
-//GDEY0579T93    5.79" b/w 792x272, SSD1683
-//Crea objeto del display
+// GDEY0579T93 5.79" b/w 792x272, SSD1683
+// Create display object
 GxEPD2_BW<GxEPD2_579_GDEY0579T93, GxEPD2_579_GDEY0579T93::HEIGHT> display(GxEPD2_579_GDEY0579T93(EINK_CS, EINK_DC, EINK_RST, EINK_BUSY));
 
-void displayPowerOn () {
-  // Activa la alimentación del ePaper
-  pinMode(7, OUTPUT);        
-  digitalWrite(7, HIGH);     
+void displayPowerOn() {
+  // Activates ePaper power
+  pinMode(7, OUTPUT);
+  digitalWrite(7, HIGH);
 }
 
-bool keyExitPressed () {
-  // Devuelve true si está apretada EXIT
-  if (digitalRead(KEY_EXIT)==0) {
-    delay (100);
-    if (digitalRead (KEY_EXIT)==0)
+bool keyExitPressed() {
+  // Returns true if EXIT is pressed
+  if (digitalRead(KEY_EXIT) == 0) {
+    delay(100);
+    if (digitalRead(KEY_EXIT) == 0)
       return true;
     else
-      return false;  
-  }
-  else
+      return false;
+  } else
     return false;
 }
 
-bool keyMenuPressed () {
-  // Devuelve true si está apretada MENU
-  if (digitalRead(KEY_MENU)==0) {
-    delay (100);
-    if (digitalRead (KEY_MENU)==0)
+bool keyMenuPressed() {
+  // Returns true if MENU is pressed
+  if (digitalRead(KEY_MENU) == 0) {
+    delay(100);
+    if (digitalRead(KEY_MENU) == 0)
       return true;
     else
-      return false;  
-  }
-  else
+      return false;
+  } else
     return false;
 }
 
-void displayPrintPartial (char *valor) {
-  // Imprime el valor del BTC con refresco parcial
-  // Definir área parcial
-  int windowX = 400; 
-  int windowY = 132; 
+void displayPrintPartial(char* valor) {
+  // Prints BTC value using partial refresh
+  // Define partial refresh area
+  int windowX = 400;
+  int windowY = 132;
   int windowW = 320;
   int windowH = 64;
 
-  // Configurar ventana parcial
+  // Configure partial window
   display.setPartialWindow(windowX, windowY, windowW, windowH);
 
-  // Mostrar valor en ePaper con refresco parcial
+  // Display value on ePaper with partial refresh
   display.firstPage();
   do {
     display.fillScreen(GxEPD_WHITE);
-    display.setCursor(windowX, windowY + 40); // Ajusta la posición del cursor según la fuente
+    display.setCursor(windowX, windowY + 40); // Adjust cursor position based on font
     display.setTextColor(GxEPD_BLACK);
     display.print(valor);
-  }
-  while (display.nextPage());
+  } while (display.nextPage());
 }
 
 ////////////////////////////////////////////////
 
-void setup() 
-{
-  // Entradas de las teclas
-  pinMode (KEY_MENU, INPUT);   // MENU
-  pinMode (KEY_EXIT, INPUT);   // EXIT
+void setup() {
+  // Configure key inputs
+  pinMode(KEY_MENU, INPUT);   // MENU
+  pinMode(KEY_EXIT, INPUT);   // EXIT
 
-  Serial.begin (115200);
+  Serial.begin(115200);
 
-  // Intentar conectar al WiFi
-  Serial.println("Conectando a WiFi...");
+  // Attempt to connect to WiFi
+  Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);
 
-  // Espera hasta que se conecte
+  // Wait until connected
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
 
-  // Conexión exitosa
+  // Successful connection
   Serial.println("");
-  Serial.print("Conectado a: ");
+  Serial.print("Connected to: ");
   Serial.println(WiFi.SSID());
-  
-  displayPowerOn ();   // Enciende pantalla
 
-  // Inicialización del epaper
+  displayPowerOn();   // Power on the screen
+
+  // Initialize ePaper
   display.init(115200);
   display.setFullWindow();
   display.setRotation(0);
 
-  // Limpiar la pantalla
-  display.fillScreen(GxEPD_WHITE); // Fondo blanco
-  
-  //Dibujar marco
+  // Clear the screen
+  display.fillScreen(GxEPD_WHITE); // White background
+
+  // Draw border
   display.drawRect(0, 0, 792, 272, GxEPD_BLACK);
   display.drawRect(1, 1, 790, 270, GxEPD_BLACK);
 
-  // Cargar bitmaps
+  // Load bitmaps
   display.drawBitmap(50, 10, gImage_bitcoin, 250, 250, GxEPD_BLACK);  // BTC
-  display.drawBitmap (760,0, gImage_menuLateral, 32, 272, GxEPD_BLACK);  // Menu lateral
+  display.drawBitmap(760, 0, gImage_sideMenu, 32, 272, GxEPD_BLACK);  // Side menu
 
-  // Mostrar textos
+  // Display text
   display.setTextColor(GxEPD_BLACK);
   display.setTextSize(1);
-  
+
   display.setFont(&FreeSansBold24pt7b);
   display.setCursor(350, 100);
-  display.print ("Cotizacion BTC");
+  display.print("BTC Price");
 
-  // Refrescar pantalla
-  display.display ();
+  // Refresh screen
+  display.display();
 }
 
-
 void loop() {
-    
-  unsigned long tiempoActual = millis();
- 
-  //Teclas
-  if (keyExitPressed())  {
+  unsigned long timeActual = millis();
+
+  // Keys
+  if (keyExitPressed()) {
     currency = CURR_EUR;
-    tiempoAnterior = tiempoActual - intervalo; // Fuerza actualizacion
+    timePrev = timeActual - interval; // Force update
   }
 
   if (keyMenuPressed()) {
     currency = CURR_USD;
-    tiempoAnterior = tiempoActual - intervalo; // Fuerza actualizacion
+    timePrev = timeActual - interval; // Force update
   }
- 
-  // Verifica si ha pasado el intervalo
-  if (tiempoActual - tiempoAnterior >= intervalo) {
-    // Actualiza el tiempo registrado
-    tiempoAnterior = tiempoActual;
 
-    // Solo intenta hacer la petición si está conectado
+  // Check if the interval has passed
+  if (timeActual - timePrev >= interval) {
+    // Update the recorded time
+    timePrev = timeActual;
+
+    // Only attempt the request if connected
     if (WiFi.status() == WL_CONNECTED) {
       HTTPClient http;
-      http.begin(endpoint);           // Prepara la conexión
-      int httpCode = http.GET();      // Realiza la petición GET a la API de CoinGecko
+      http.begin(endpoint);           // Prepare the connection
+      int httpCode = http.GET();      // Perform GET request to CoinGecko API
 
       if (httpCode > 0) {
-        // Si la respuesta es positiva, leemos el contenido
+        // If the response is positive, read the content
         String payload = http.getString();
 
-        // Usamos ArduinoJson para parsear
+        // Parse with ArduinoJson
         DynamicJsonDocument doc(1024);
         DeserializationError error = deserializeJson(doc, payload);
 
         if (!error) {
-          // Parsear valores
+          // Parse values
           float priceUSD = doc["bitcoin"]["usd"];
           float priceEUR = doc["bitcoin"]["eur"];
 
-          // Preparar según la moneda
-          if (currency == CURR_USD) 
+          // Prepare based on the currency
+          if (currency == CURR_USD)
             sprintf(valorBTC, "USD %.0f", priceUSD);
           else
             sprintf(valorBTC, "EUR %.0f", priceEUR);
 
           Serial.println(valorBTC);
 
-          // Imprime valor usando Refresco Parcial
-          displayPrintPartial (valorBTC);
-          
+          // Print value using partial refresh
+          displayPrintPartial(valorBTC);
+        } else {
+          // If there's an error parsing JSON
+          Serial.print("Error parsing JSON: ");
+          Serial.println(error.c_str());
+        }
       } else {
-
-        // Si hay un error al parsear
-        Serial.print("Error al parsear JSON: ");
-        Serial.println(error.c_str());
-      }
-      } else {
-        // Si el código de respuesta HTTP es negativo o falla
-        Serial.print("Error en la petición: ");
+        // If the HTTP response code is negative or fails
+        Serial.print("Request error: ");
         Serial.println(httpCode);
       }
 
-      http.end(); // Cierra la conexión
-  
+      http.end(); // Close the connection
+
     } else {
-      Serial.println("WiFi desconectado, intentando reconectar...");
+      Serial.println("WiFi disconnected, attempting to reconnect...");
       WiFi.begin(ssid, password);
     }
-
   }
-
 }
