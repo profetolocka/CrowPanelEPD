@@ -150,7 +150,7 @@ void setup() {
   display.setTextSize(1);
 
   display.setFont(&FreeSansBold24pt7b);
-  display.setCursor(350, 100);
+  display.setCursor(410, 100);
   display.print("BTC Price");
 
   // Refresh screen
