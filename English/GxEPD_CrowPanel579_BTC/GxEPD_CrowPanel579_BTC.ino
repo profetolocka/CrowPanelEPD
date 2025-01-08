@@ -35,8 +35,8 @@ const int CURR_USD = 0;
 const int CURR_EUR = 1;
 
 // Wi-Fi network configuration
-const char* ssid = "LosToloNetwork";       // Use your network name
-const char* password = "performance15";    // Use your password
+const char* ssid = "******";       // Use your network name
+const char* password = "******";    // Use your password
 
 // CoinGecko API URL to fetch Bitcoin price in USD and EUR
 const char* endpoint = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd,eur";
